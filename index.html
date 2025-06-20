@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GH Minimal Navbar</title>
+  <!-- Funky font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Foundation&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg-light: #f8f6ff;
+      --color-bg-dark: #181024;
+      --color-primary-light: #b39ddb;
+      --color-primary-dark: #7c4dff;
+      --color-text-light: #222;
+      --color-text-dark: #fff;
+    }
+    html {
+      color-scheme: dark light;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--color-bg-dark);
+      color: var(--color-text-dark);
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background: var(--color-bg-light);
+      color: var(--color-text-light);
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 2rem;
+      background: var(--color-bg-dark); /* Match main background */
+      transition: background 0.3s;
+    }
+    body.light .navbar {
+      background: var(--color-bg-light); /* Match main background in light mode */
+    }
+    .navbar .logo {
+      font-family: 'Edu NSW ACT Foundation', cursive;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      color: #fff;
+      user-select: none;
+    }
+    body.light .navbar .logo {
+      color: #6a1b9a;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.7rem;
+      color: #fff;
+      transition: color 0.3s;
+      outline: none;
+    }
+    body.light .theme-toggle {
+      color: #6a1b9a;
+    }
+    .main-content {
+      display: flex;
+      flex-direction: row;
+      width: 90vw;
+      /* Adjust the height below to control vertical space. Try values like 70vh, 80vh, etc. */
+      height: 85vh; /* <-- increase this value for more vertical space */
+      gap: 2vw;
+      padding: 3vw;
+      box-sizing: border-box;
+      margin: 0 auto;
+      position: relative;
+      /* No top offset for even vertical space above and below */
+    }
+    .side-box {
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 24px 0 rgba(60, 30, 90, 0.08);
+      background: rgba(124, 77, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+      transition: background 0.3s;
+      z-index: 1;
+    }
+    body.light .side-box {
+      background: rgba(88, 27, 255, 0.22);
+    }
+    .left-box {
+      flex: 3 1 0;
+    }
+    .right-box {
+      flex: 7 1 0;
+    }
+    /* CSS for profile image */
+    .profile-pic {
+      width: 60%;
+      max-width: 180px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 12px 0 rgba(60, 30, 90, 0.10);
+      margin: 0 0 1.2rem 0;
+      border: 4px solid rgba(124, 77, 255, 0.18);
+      background: #fff;
+      transition: border 0.3s;
+    }
+    body.light .profile-pic {
+      border: 4px solid rgba(88, 27, 255, 0.22);
+      background: #f8f6ff;
+    }
+    .profile-text {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .profile-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.2rem;
+    }
+    .profile-role {
+      font-size: 1rem;
+      color: #7c4dff;
+      font-weight: 500;
+      margin-bottom: 0.1rem;
+    }
+    body.light .profile-role {
+      color: #6a1b9a;
+    }
+    .profile-edu, .profile-city {
+      font-size: 0.95rem;
+      color: #888;
+      font-weight: 400;
+    }
+    body.light .profile-edu, body.light .profile-city {
+      color: #5e548e;
+    }
+    @media (max-width: 600px) {
+      .profile-pic {
+        width: 90%;
+        max-width: 120px;
+        margin: 0 0 1rem 0;
+      }
+    }
+    @media (max-width: 900px) {
+      .main-content {
+        flex-direction: column;
+        height: auto;
+        gap: 2vw;
+        padding: 4vw 2vw;
+        width: 100%;
+        top: 0;
+      }
+      .left-box, .right-box {
+        width: 100%;
+        min-width: 0;
+        min-height: 120px;
+        height: auto;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">HG</div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <!-- Icon will be set by JS -->
+    </button>
+  </nav>
+  <div class="main-content">
+    <div class="side-box left-box">
+      <img src="https://avatars.githubusercontent.com/u/86101160?v=4" alt="Profile" class="profile-pic" style="margin-top:0;margin-bottom:1.2rem;" />
+      <div class="profile-text">
+        <div class="profile-name">Harshith Gandhe</div>
+        <div class="profile-role">Sr.SWE @ Acceldata</div>
+        <div class="profile-edu">BITS PILANI</div>
+        <div class="profile-city">BANGALORE</div>
+      </div>
+    </div>
+    <div class="side-box right-box"></div>
+  </div>
+  <script>
+    // Theme toggle logic
+    const body = document.body;
+    const toggleBtn = document.getElementById('themeToggle');
+    // SVG icons
+    const moon = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>';
+    const sun = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    // Default to dark mode
+    function setTheme(dark) {
+      if (dark) {
+        body.classList.remove('light');
+        toggleBtn.innerHTML = sun;
+      } else {
+        body.classList.add('light');
+        toggleBtn.innerHTML = moon;
+      }
+    }
+    // Initial theme
+    setTheme(true);
+    toggleBtn.addEventListener('click', () => {
+      const isDark = !body.classList.contains('light');
+      setTheme(!isDark);
+    });
+  </script>
+</body>
+</html>
