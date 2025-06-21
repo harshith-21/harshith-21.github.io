@@ -50,14 +50,12 @@
       display: flex;
       flex-direction: row;
       width: 90vw;
-      /* Adjust the height below to control vertical space. Try values like 70vh, 80vh, etc. */
-      height: 90vh; /* <-- increase this value for more vertical space */
+      height: 90vh;
       gap: 2vw;
       padding: 3vw;
       box-sizing: border-box;
       margin: 0 auto;
       position: relative;
-      /* No top offset for even vertical space above and below */
     }
     .side-box {
       border-radius: 1.5rem;
@@ -76,13 +74,56 @@
       z-index: 1;
     }
     .left-box {
-      flex: 3 1 0;
+      flex: 0 0 320px;
+      max-width: 350px;
+      min-width: 260px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem 1.5rem 1rem;
+      min-height: 220px;
+      box-sizing: border-box;
+      gap: 1.1rem;
+      overflow: hidden;
+    }
+    .left-box > .profile-pic {
+      flex-shrink: 0;
+      flex-grow: 0;
+      max-width: 120px;
+      min-width: 60px;
+      width: 60%;
+      margin: 0 auto 0.7rem auto;
+      align-self: center;
+    }
+    .left-box > .profile-text {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .left-box .profile-socials {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 1.1rem;
+      width: 100%;
+      overflow: hidden;
     }
     .right-box {
-      flex: 7 1 0;
+      flex: 1 1 0;
       align-items: stretch;
       justify-content: flex-start;
       padding-top: 0;
+      min-width: 0;
     }
     /* CSS for profile image */
     .profile-pic {
@@ -222,13 +263,6 @@
     .terminal-path {
       color: #ffd54f;
     }
-    @media (max-width: 600px) {
-      .profile-pic {
-        width: 90%;
-        max-width: 120px;
-        margin: 0 0 1rem 0;
-      }
-    }
     @media (max-width: 900px) {
       .main-content {
         flex-direction: column;
@@ -244,6 +278,390 @@
         min-height: 120px;
         height: auto;
         margin-bottom: 0;
+        max-width: 100%;
+      }
+      .left-box {
+        order: 1;
+        padding: 2rem 1rem 1.5rem 1rem;
+        gap: 1.1rem;
+        min-height: 180px;
+      }
+      .right-box {
+        order: 2;
+        margin-top: 0.7rem;
+        min-height: 220px;
+        padding: 0.5rem 0.2rem 1.2rem 0.2rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-content {
+        padding: 2vw 0.5vw;
+        gap: 1vw;
+      }
+      .left-box {
+        padding: 1rem 0.2rem 1rem 0.2rem;
+        min-height: 120px;
+        gap: 0.7rem;
+      }
+      .left-box > .profile-pic {
+        max-width: 60px;
+      }
+      .left-box > .profile-text {
+        font-size: 0.98rem;
+      }
+      .left-box .profile-socials {
+        gap: 0.7rem;
+        margin-top: 0.5rem;
+      }
+      .right-box {
+        padding: 0.2rem 0 1rem 0;
+        min-height: 140px;
+      }
+    }
+    @media (max-width: 400px) {
+      .main-content {
+        padding: 1vw 0.2vw;
+      }
+      .left-box {
+        padding: 0.7rem 0.1rem 0.7rem 0.1rem;
+        min-height: 80px;
+        gap: 0.3rem;
+      }
+      .left-box > .profile-pic {
+        max-width: 40px;
+      }
+      .left-box > .profile-text {
+        font-size: 0.92rem;
+      }
+      .right-box {
+        min-height: 80px;
+      }
+    }
+    @media (max-width: 600px) {
+      .profile-pic {
+        width: 90%;
+        max-width: 120px;
+        margin: 0 0 1rem 0;
+      }
+    }
+    @media (max-width: 1200px) and (min-width: 901px) {
+      .main-content {
+        flex-direction: row;
+        height: auto;
+        gap: 2vw;
+        padding: 4vw 2vw;
+        width: 100%;
+        top: 0;
+        justify-content: flex-end;
+      }
+      .left-box {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        min-width: 260px;
+        gap: 1.1rem;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        margin-left: auto;
+        margin-right: 0;
+      }
+      .left-box > .profile-pic {
+        width: 90px;
+        min-width: 70px;
+        max-width: 120px;
+        margin: 0 auto 0.7rem auto;
+        align-self: center;
+      }
+      .left-box > .profile-text {
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+        flex: 1 1 0;
+        min-width: 0;
+        overflow: hidden;
+        word-break: break-word;
+        font-size: 1.08rem;
+      }
+      .left-box .profile-socials {
+        justify-content: center;
+        margin-top: 1.2rem;
+        gap: 1.2rem;
+      }
+      .right-box {
+        width: 60%;
+        min-width: 0;
+        margin-left: 0;
+        margin-right: auto;
+        min-height: 320px;
+        padding: 0.5rem 0.2rem 1.2rem 0.2rem;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    /* --- Tablet: stacked, profile left/text right in left-box --- */
+    @media (max-width: 1200px) and (min-width: 701px) {
+      .main-content {
+        flex-direction: column;
+        width: 100vw;
+        height: auto;
+        gap: 2vw;
+        padding: 4vw 2vw;
+      }
+      .left-box {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        min-height: 180px;
+        gap: 0;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        max-width: none;
+        margin: 0;
+      }
+      .left-box > .profile-pic {
+        flex: 0 0 40%;
+        max-width: none;
+        min-width: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+      .left-box > .profile-pic img,
+      .left-box > img.profile-pic {
+        display: block;
+        margin: 0 auto;
+        width: 120px;
+        max-width: 150px;
+        min-width: 90px;
+        aspect-ratio: 1/1;
+      }
+      .left-box > .profile-text {
+        flex: 0 0 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 0.5rem;
+        min-width: 0;
+        overflow: hidden;
+        word-break: break-word;
+        font-size: 1.08rem;
+        padding-left: 2vw;
+        padding-right: 2vw;
+      }
+      .left-box .profile-socials {
+        justify-content: center;
+        margin-top: 1.2rem;
+        gap: 1.2rem;
+      }
+      .right-box {
+        margin-top: 1.5rem;
+        min-height: 320px;
+        padding: 0.5rem 0.2rem 1.2rem 0.2rem;
+        width: 100%;
+      }
+    }
+    /* Remove all conflicting .left-box rules in this band */
+    @media (max-width: 1200px) and (min-width: 701px) {
+      .left-box {
+        flex: unset !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+    /* Remove desktop/tablet .left-box width/flex/max-width in this band */
+    @media (max-width: 1200px) and (min-width: 701px) {
+      .left-box {
+        flex-basis: unset !important;
+      }
+    }
+    @media (max-width: 600px) {
+      .profile-pic {
+        width: 90%;
+        max-width: 120px;
+        margin: 0 0 1rem 0;
+      }
+    }
+    @media (max-width: 1200px) and (min-width: 901px) {
+      .main-content {
+        flex-direction: row;
+        height: auto;
+        gap: 2vw;
+        padding: 4vw 2vw;
+        width: 100%;
+        top: 0;
+        justify-content: flex-end;
+      }
+      .left-box {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        min-width: 260px;
+        gap: 1.1rem;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        margin-left: auto;
+        margin-right: 0;
+      }
+      .left-box > .profile-pic {
+        width: 90px;
+        min-width: 70px;
+        max-width: 120px;
+        margin: 0 auto 0.7rem auto;
+        align-self: center;
+      }
+      .left-box > .profile-text {
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+        flex: 1 1 0;
+        min-width: 0;
+        overflow: hidden;
+        word-break: break-word;
+        font-size: 1.08rem;
+      }
+      .left-box .profile-socials {
+        justify-content: center;
+        margin-top: 1.2rem;
+        gap: 1.2rem;
+      }
+      .right-box {
+        width: 60%;
+        min-width: 0;
+        margin-left: 0;
+        margin-right: auto;
+        min-height: 320px;
+        padding: 0.5rem 0.2rem 1.2rem 0.2rem;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    /* --- Tablet: stacked, profile left/text right in left-box --- */
+    @media (max-width: 1200px) and (min-width: 701px) {
+      .main-content {
+        flex-direction: column;
+        width: 100vw;
+        height: auto;
+        gap: 2vw;
+        padding: 4vw 2vw;
+      }
+      .left-box {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        min-height: 180px;
+        gap: 0;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        max-width: none;
+        margin: 0;
+      }
+      .left-box > .profile-pic {
+        flex: 0 0 40%;
+        max-width: none;
+        min-width: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+      .left-box > .profile-pic img,
+      .left-box > img.profile-pic {
+        display: block;
+        margin: 0 auto;
+        width: 120px;
+        max-width: 150px;
+        min-width: 90px;
+        aspect-ratio: 1/1;
+      }
+      .left-box > .profile-text {
+        flex: 0 0 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 0.5rem;
+        min-width: 0;
+        overflow: hidden;
+        word-break: break-word;
+        font-size: 1.08rem;
+        padding-left: 2vw;
+        padding-right: 2vw;
+      }
+      .left-box .profile-socials {
+        justify-content: center;
+        margin-top: 1.2rem;
+        gap: 1.2rem;
+      }
+      .right-box {
+        margin-top: 1.5rem;
+        min-height: 320px;
+        padding: 0.5rem 0.2rem 1.2rem 0.2rem;
+        width: 100%;
+      }
+    }
+
+    /* --- Mobile: stacked, image above text --- */
+    @media (max-width: 700px) {
+      .main-content {
+        flex-direction: column;
+        width: 100vw;
+        height: auto;
+        gap: 1vw;
+        padding: 2vw 0.5vw;
+      }
+      .left-box {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        min-height: 120px;
+        gap: 0.7rem;
+        padding: 1rem 0.2rem 1rem 0.2rem;
+      }
+      .left-box > .profile-pic,
+      .left-box > img.profile-pic {
+        width: 70px;
+        max-width: 90px;
+        min-width: 40px;
+        margin: 0 auto 0.7rem auto;
+        align-self: center;
+        display: block;
+      }
+      .left-box > .profile-text {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.98rem;
+        min-width: 0;
+        overflow: hidden;
+        word-break: break-word;
+      }
+      .left-box .profile-socials {
+        gap: 0.7rem;
+        margin-top: 0.5rem;
+        justify-content: center;
+      }
+      .right-box {
+        padding: 0.2rem 0 1rem 0;
+        min-height: 140px;
+        width: 100%;
+        margin-top: 1.2rem;
       }
     }
   </style>
