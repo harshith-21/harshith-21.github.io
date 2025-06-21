@@ -327,35 +327,96 @@
 
     // --- Terminal logic ---
     const terminalContent = document.querySelector('.terminal-content');
+    // Directory structure as a JSON object
+    const fileSystem = {
+      projects: {
+        'my-website': {},
+        'cli-tool': {},
+        'README.md': null
+      },
+      interests: {
+        'ai': {},
+        'music': {},
+        'README.md': null
+      },
+      certifications: {
+        'aws.pdf': null,
+        'gcp.pdf': null
+      },
+      'about.txt': null
+    };
+
+    // Helper to get directory contents
+    function getDirContents(pathArr, fs) {
+      let node = fs;
+      for (const part of pathArr) {
+        if (node && typeof node === 'object' && part in node) {
+          node = node[part];
+        } else {
+          return null;
+        }
+      }
+      return node;
+    }
+
     let fakePath = '~';
-    const folders = ['projects', 'interests', 'certifications'];
+    let currentPath = [];
+
+    function listDir(pathArr) {
+      const node = getDirContents(pathArr, fileSystem);
+      if (!node || typeof node !== 'object') return '';
+      return Object.keys(node).map(name => {
+        if (node[name] && typeof node[name] === 'object') {
+          // Directory: color purple
+          return `<span style="color:#b39ddb">${name}/</span>`;
+        } else {
+          // File: default color
+          return `<span style="color:#e0e0e0">${name}</span>`;
+        }
+      }).join('    ');
+    }
+
     const commands = {
-      ls: () => folders.join('    '),
-      pwd: () => '/Users/harshith',
+      ls: () => listDir(currentPath),
+      pwd: () => '/Users/harshith' + (currentPath.length ? '/' + currentPath.join('/') : ''),
       whoami: () => 'harshith',
       clear: () => { terminalContent.innerHTML = ''; addNewPrompt(); return ''; },
-      help: () => 'Available commands: ls, pwd, whoami, clear, help, echo, date, cd, cat, exit',
+      help: () => 'Available commands: ls, pwd, whoami, clear, help, echo, date, cd, cat, exit, history',
       echo: (args) => args.join(' '),
       date: () => new Date().toString(),
       cd: (args) => {
-        if (args.length && folders.includes(args[0])) {
-          fakePath = `~/${args[0]}`;
-          return `Changed directory to ${fakePath}`;
-        } else if (args.length) {
-          return `cd: no such file or directory: ${args[0]}`;
-        } else {
+        if (!args.length || args[0] === '~') {
+          currentPath = [];
           fakePath = '~';
           return '';
         }
+        if (args[0] === '..') {
+          if (currentPath.length > 0) currentPath.pop();
+          fakePath = '~' + (currentPath.length ? '/' + currentPath.join('/') : '');
+          return '';
+        }
+        const node = getDirContents([...currentPath, args[0]], fileSystem);
+        if (node && typeof node === 'object') {
+          currentPath.push(args[0]);
+          fakePath = '~/' + currentPath.join('/');
+          return '';
+        } else {
+          return `cd: no such file or directory: ${args[0]}`;
+        }
       },
-      cat: (args) => `cat: ${args[0] || ''}: No such file or directory`,
+      cat: (args) => {
+        const node = getDirContents([...currentPath, args[0]], fileSystem);
+        if (node === null) return `Contents of ${args[0]}...`;
+        if (node && typeof node === 'object') return `cat: ${args[0]}: Is a directory`;
+        return `cat: ${args[0] || ''}: No such file or directory`;
+      },
       exit: () => 'logout',
     };
 
     function createPromptLine(input = '') {
       const line = document.createElement('div');
       line.className = 'terminal-line';
-      line.innerHTML = `<span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">${fakePath}</span>$</span> <span class="terminal-input" contenteditable="true" spellcheck="false">${input}</span>`;
+      line.innerHTML = `<span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">${fakePath}</span>$</span>&nbsp;<span class="terminal-input" contenteditable="true" spellcheck="false">${input}</span>`;
       return line;
     }
 
