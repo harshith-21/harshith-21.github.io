@@ -404,20 +404,62 @@
       }
     }
 
-    // Listen for Enter key on input
+    // --- Command history ---
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Listen for Enter key and arrow keys on input
     terminalContent.addEventListener('keydown', function(e) {
       const inputEl = terminalContent.querySelector('.terminal-line:last-child .terminal-input');
       if (!inputEl || document.activeElement !== inputEl) return;
+      // Up/Down arrow for history
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (commandHistory.length === 0) return;
+        if (historyIndex === -1) historyIndex = commandHistory.length;
+        if (e.key === 'ArrowUp') {
+          if (historyIndex > 0) historyIndex--;
+        } else if (e.key === 'ArrowDown') {
+          if (historyIndex < commandHistory.length) historyIndex++;
+        }
+        if (historyIndex >= 0 && historyIndex < commandHistory.length) {
+          inputEl.textContent = commandHistory[historyIndex];
+        } else {
+          inputEl.textContent = '';
+        }
+        // Move cursor to end
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(inputEl);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
+      }
+      // Enter key for command
       if (e.key === 'Enter') {
         e.preventDefault();
         const value = inputEl.textContent.trim();
+        if (value) {
+          commandHistory.push(value);
+        }
+        historyIndex = -1;
         inputEl.contentEditable = 'false';
         // Show output if any
-        const output = runCommand(value);
-        if (output) {
+        let output = runCommand(value);
+        if (value === 'history') {
+          // For each command, create a new output line so each is on its own line and scrolls like a real terminal
+          commandHistory.forEach((cmd, i) => {
+            const histLine = document.createElement('div');
+            histLine.className = 'terminal-line';
+            histLine.innerHTML = `<span style="margin-left:calc(1.1em + 0.2em)">${i + 1}  ${cmd}</span>`;
+            terminalContent.appendChild(histLine);
+          });
+          scrollTerminalToBottom();
+        } else if (output) {
           const outLine = document.createElement('div');
           outLine.className = 'terminal-line';
-          outLine.innerHTML = `<span style="margin-left:calc(1.1em + 0.2em)">${output}</span>`;
+          outLine.innerHTML = `<span style="margin-left:calc(1.1em + 0.2em); white-space: pre-line">${output}</span>`;
           terminalContent.appendChild(outLine);
           scrollTerminalToBottom();
         }
