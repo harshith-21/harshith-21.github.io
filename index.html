@@ -200,6 +200,8 @@
       justify-content: flex-start;
       align-items: flex-start;
       padding: 0;
+      overflow-y: auto;
+      max-height: 100%;
     }
     .terminal-line {
       display: flex;
@@ -219,19 +221,6 @@
     }
     .terminal-path {
       color: #ffd54f;
-    }
-    .terminal-cursor {
-      width: 0.7em;
-      height: 1.2em;
-      background: #e0e0e0;
-      margin-left: 0.2em;
-      display: inline-block;
-      animation: blink 1s steps(1) infinite;
-      border-radius: 2px;
-    }
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
     }
     @media (max-width: 600px) {
       .profile-pic {
@@ -312,7 +301,7 @@
       </div>
       <div class="terminal-content">
         <div class="terminal-line">
-          <span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span><span class="terminal-cursor"></span>
+          <span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span>
         </div>
       </div>
     </div>
@@ -336,52 +325,113 @@
     setInterval(updateTerminalTime, 1000);
     updateTerminalTime();
 
-    // Terminal prompt logic
+    // --- Terminal logic ---
     const terminalContent = document.querySelector('.terminal-content');
-    function createPromptLine() {
+    let fakePath = '~';
+    const folders = ['projects', 'interests', 'certifications'];
+    const commands = {
+      ls: () => folders.join('    '),
+      pwd: () => '/Users/harshith',
+      whoami: () => 'harshith',
+      clear: () => { terminalContent.innerHTML = ''; addNewPrompt(); return ''; },
+      help: () => 'Available commands: ls, pwd, whoami, clear, help, echo, date, cd, cat, exit',
+      echo: (args) => args.join(' '),
+      date: () => new Date().toString(),
+      cd: (args) => {
+        if (args.length && folders.includes(args[0])) {
+          fakePath = `~/${args[0]}`;
+          return `Changed directory to ${fakePath}`;
+        } else if (args.length) {
+          return `cd: no such file or directory: ${args[0]}`;
+        } else {
+          fakePath = '~';
+          return '';
+        }
+      },
+      cat: (args) => `cat: ${args[0] || ''}: No such file or directory`,
+      exit: () => 'logout',
+    };
+
+    function createPromptLine(input = '') {
       const line = document.createElement('div');
       line.className = 'terminal-line';
-      line.innerHTML = '<span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span>';
+      line.innerHTML = `<span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">${fakePath}</span>$</span> <span class="terminal-input" contenteditable="true" spellcheck="false">${input}</span>`;
       return line;
     }
-    function createPromptLineWithCursor() {
-      const line = document.createElement('div');
-      line.className = 'terminal-line';
-      line.innerHTML = '<span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span><span class="terminal-cursor"></span>';
-      return line;
-    }
-    // Remove existing prompt line and add a new one
+
     function addNewPrompt() {
-      // Remove cursor from previous prompt
-      const prevCursor = terminalContent.querySelector('.terminal-cursor');
-      if (prevCursor) prevCursor.remove();
-      // Add new prompt with cursor
-      const newLine = createPromptLineWithCursor();
+      // Make all previous inputs readonly
+      const allInputs = terminalContent.querySelectorAll('.terminal-input');
+      allInputs.forEach(el => el.contentEditable = 'false');
+      // Add new prompt
+      const newLine = createPromptLine();
       terminalContent.appendChild(newLine);
+      const inputEl = newLine.querySelector('.terminal-input');
+      inputEl.focus();
       scrollTerminalToBottom();
     }
-    // On page load, ensure only the last prompt has a cursor
-    (function ensureSingleCursor() {
-      const lines = terminalContent.querySelectorAll('.terminal-line');
-      lines.forEach((line, idx) => {
-        if (idx < lines.length - 1) {
-          const cursor = line.querySelector('.terminal-cursor');
-          if (cursor) cursor.remove();
-        }
-      });
-    })();
-    // Scroll to bottom if overflow
+
     function scrollTerminalToBottom() {
       terminalContent.scrollTop = terminalContent.scrollHeight;
     }
-    // Listen for Enter key
-    document.addEventListener('keydown', function(e) {
-      // Only if terminal is visible
-      if (document.activeElement.tagName !== 'BODY') return;
-      if (e.key === 'Enter') {
-        addNewPrompt();
-        e.preventDefault();
+
+    // On page load, clear terminal and add a fresh prompt
+    window.addEventListener('DOMContentLoaded', () => {
+      terminalContent.innerHTML = '';
+      addNewPrompt();
+    });
+
+    // On page load, ensure only the last prompt is editable and has blinking cursor
+    (function ensureSinglePrompt() {
+      const lines = terminalContent.querySelectorAll('.terminal-line');
+      lines.forEach((line, idx) => {
+        const input = line.querySelector('.terminal-input');
+        if (input) input.contentEditable = (idx === lines.length - 1) ? 'true' : 'false';
+      });
+      // Focus last input
+      const lastInput = terminalContent.querySelector('.terminal-line:last-child .terminal-input');
+      if (lastInput) lastInput.focus();
+    })();
+
+    // Command execution
+    function runCommand(cmd) {
+      const [base, ...args] = cmd.trim().split(/\s+/);
+      if (!base) return '';
+      if (commands[base]) {
+        return commands[base](args);
+      } else {
+        return `${base}: command not found`;
       }
+    }
+
+    // Listen for Enter key on input
+    terminalContent.addEventListener('keydown', function(e) {
+      const inputEl = terminalContent.querySelector('.terminal-line:last-child .terminal-input');
+      if (!inputEl || document.activeElement !== inputEl) return;
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = inputEl.textContent.trim();
+        inputEl.contentEditable = 'false';
+        // Show output if any
+        const output = runCommand(value);
+        if (output) {
+          const outLine = document.createElement('div');
+          outLine.className = 'terminal-line';
+          outLine.innerHTML = `<span style="margin-left:calc(1.1em + 0.2em)">${output}</span>`;
+          terminalContent.appendChild(outLine);
+          scrollTerminalToBottom();
+        }
+        if (value === 'clear') return; // clear already handled
+        addNewPrompt();
+      }
+    });
+
+    // Autofocus on terminal input when clicking anywhere in the terminal area
+    terminalContent.addEventListener('mousedown', function(e) {
+      setTimeout(() => {
+        const inputEl = terminalContent.querySelector('.terminal-line:last-child .terminal-input');
+        if (inputEl) inputEl.focus();
+      }, 0);
     });
   </script>
 </body>
