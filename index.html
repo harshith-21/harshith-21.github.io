@@ -27,8 +27,11 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.75rem 2rem;
-      background: var(--color-bg-dark); /* Match main background */
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
       transition: background 0.3s;
+      z-index: 10;
     }
     .navbar .logo {
       font-family: 'Edu NSW ACT Foundation', cursive;
@@ -612,7 +615,6 @@
         width: 100%;
       }
     }
-
     /* --- Mobile: stacked, image above text --- */
     @media (max-width: 700px) {
       .main-content {
@@ -655,68 +657,173 @@
         background: rgba(33, 0, 125, 0.12);
       }
     }
+    .snap-container {
+      scroll-snap-type: y mandatory;
+      height: 100vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      scroll-behavior: auto; /* instant snap, fastest possible */
+      scroll-snap-stop: always; /* snap as soon as possible */
+    }
+    .snap-container::-webkit-scrollbar {
+      display: none; /* Chrome/Safari/Webkit */
+    }
+    .main-content, .slide-below {
+      scroll-snap-align: start;
+    }
+    .slide-below {
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(33,0,125,0.10);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .slide-below-inner {
+      width: 90vw;
+      height: 90vh;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+    /* Tubelight scroll bar */
+    .scroll-tube {
+      position: fixed;
+      right: 2vw;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 25vh;
+      min-height: 80px;
+      max-height: 200px;
+      pointer-events: none;
+    }
+    .scroll-tube-bar {
+      width: 10px;
+      height: 100%;
+      background: rgba(124,77,255,0.13);
+      border-radius: 8px;
+      box-shadow: 0 0 16px 4px rgba(124,77,255,0.18), 0 0 40px 10px rgba(124,77,255,0.10);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .scroll-tube-highlight {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #b39ddb 60%, #7c4dff 100%);
+      box-shadow: 0 0 16px 4px #7c4dff99;
+      transition: top 0.18s cubic-bezier(.77,0,.18,1), background 0.18s;
+      top: 0;
+    }
+    .scroll-tube.highlight-bottom .scroll-tube-highlight {
+      top: 50%;
+      background: linear-gradient(0deg, #b39ddb 60%, #7c4dff 100%);
+    }
+    @media (max-width: 700px) {
+      .scroll-tube {
+        right: 1vw;
+        height: 18vh;
+        min-height: 50px;
+        max-height: 100px;
+      }
+      .scroll-tube-bar {
+        width: 7px;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="logo">HG</div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <!-- Icon will be set by JS -->
-    </button>
-  </nav>
-  <div class="main-content">
-    <div class="side-box left-box">
-      <img src="https://avatars.githubusercontent.com/u/86101160?v=4" alt="Profile" class="profile-pic" style="margin-top:0;margin-bottom:1.2rem;" />
-      <div class="profile-text">
-        <div class="profile-name">Harshith Gandhe</div>
-        <div class="profile-role">Sr.SWE @ Acceldata</div>
-        <div class="profile-edu">BITS PILANI</div>
-        <div class="profile-city">BANGALORE</div>
-        <div class="profile-socials">
-          <a href="https://github.com/harshith-21" class="social-link" target="_blank" aria-label="GitHub">
-            <!-- GitHub Mark (official, dark purple, no border, no cut) -->
-            <svg class="social-img github-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#4B277A"/>
-              <path fill="#fff" d="M16 7.026c-4.97 0-9 4.03-9 9 0 3.98 2.58 7.35 6.16 8.54.45.08.62-.2.62-.44 0-.22-.01-.94-.01-1.7-2.51.46-3.04-.61-3.23-1.17-.1-.26-.54-1.17-.92-1.41-.32-.18-.78-.62-.01-.63.72-.01 1.23.66 1.4.94.82 1.38 2.13.99 2.65.76.08-.6.32-.99.58-1.22-2-.23-4.1-1-4.1-4.44 0-.98.35-1.78.93-2.41-.09-.23-.4-1.16.09-2.41 0 0 .75-.24 2.45.92.71-.2 1.47-.3 2.23-.3.76 0 1.52.1 2.23.3 1.7-1.16 2.45-.92 2.45-.92.49 1.25.18 2.18.09 2.41.58.63.93 1.43.93 2.41 0 3.45-2.1 4.21-4.1 4.44.33.28.62.83.62 1.68 0 1.22-.01 2.2-.01 2.5 0 .24.17.52.62.44A9.01 9.01 0 0 0 25 16.026c0-4.97-4.03-9-9-9Z"/>
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/in/harshith-gandhe/" class="social-link" target="_blank" aria-label="LinkedIn">
-            <!-- LinkedIn (official, centered, larger white 'in' on purple) -->
-            <svg class="social-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#4B277A"/>
-              <g>
-                <text x="16" y="23" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="bold" fill="#fff" letter-spacing="-1">in</text>
-              </g>
-            </svg>
-          </a>
-          <a href="https://medium.com/@gandheharshith21" class="social-link" target="_blank" aria-label="Medium">
-            <!-- Medium (official, dark purple, no border, no cut) -->
-            <svg class="social-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#4B277A"/>
-              <ellipse cx="10.5" cy="16" rx="4.5" ry="7" fill="#fff"/>
-              <ellipse cx="21.5" cy="16" rx="3.5" ry="7" fill="#fff"/>
-              <ellipse cx="16" cy="16" rx="2.5" ry="7" fill="#fff"/>
-            </svg>
-          </a>
+    <nav class="navbar">
+      <div class="logo">HG</div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <!-- Icon will be set by JS -->
+      </button>
+    </nav>
+    <div class="snap-container">
+      <div class="main-content">
+        <div class="side-box left-box">
+          <img src="https://avatars.githubusercontent.com/u/86101160?v=4" alt="Profile" class="profile-pic" style="margin-top:0;margin-bottom:1.2rem;" />
+          <div class="profile-text">
+            <div class="profile-name">Harshith Gandhe</div>
+            <div class="profile-role">Sr.SWE @ Acceldata</div>
+            <div class="profile-edu">BITS PILANI</div>
+            <div class="profile-city">BANGALORE</div>
+            <div class="profile-socials">
+              <a href="https://github.com/harshith-21" class="social-link" target="_blank" aria-label="GitHub">
+                <!-- GitHub Mark (official, dark purple, no border, no cut) -->
+                <svg class="social-img github-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="32" height="32" rx="6" fill="#4B277A"/>
+                  <path fill="#fff" d="M16 7.026c-4.97 0-9 4.03-9 9 0 3.98 2.58 7.35 6.16 8.54.45.08.62-.2.62-.44 0-.22-.01-.94-.01-1.7-2.51.46-3.04-.61-3.23-1.17-.1-.26-.54-1.17-.92-1.41-.32-.18-.78-.62-.01-.63.72-.01 1.23.66 1.4.94.82 1.38 2.13.99 2.65.76.08-.6.32-.99.58-1.22-2-.23-4.1-1-4.1-4.44 0-.98.35-1.78.93-2.41-.09-.23-.4-1.16.09-2.41 0 0 .75-.24 2.45.92.71-.2 1.47-.3 2.23-.3.76 0 1.52.1 2.23.3 1.7-1.16 2.45-.92 2.45-.92.49 1.25.18 2.18.09 2.41.58.63.93 1.43.93 2.41 0 3.45-2.1 4.21-4.1 4.44.33.28.62.83.62 1.68 0 1.22-.01 2.2-.01 2.5 0 .24.17.52.62.44A9.01 9.01 0 0 0 25 16.026c0-4.97-4.03-9-9-9Z"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/in/harshith-gandhe/" class="social-link" target="_blank" aria-label="LinkedIn">
+                <!-- LinkedIn (official, centered, larger white 'in' on purple) -->
+                <svg class="social-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="32" height="32" rx="6" fill="#4B277A"/>
+                  <g>
+                    <text x="16" y="23" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="bold" fill="#fff" letter-spacing="-1">in</text>
+                  </g>
+                </svg>
+              </a>
+              <a href="https://medium.com/@gandheharshith21" class="social-link" target="_blank" aria-label="Medium">
+                <!-- Medium (official, dark purple, no border, no cut) -->
+                <svg class="social-img" viewBox="0 0 32 32" width="35" height="35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="32" height="32" rx="6" fill="#4B277A"/>
+                  <ellipse cx="10.5" cy="16" rx="4.5" ry="7" fill="#fff"/>
+                  <ellipse cx="21.5" cy="16" rx="3.5" ry="7" fill="#fff"/>
+                  <ellipse cx="16" cy="16" rx="2.5" ry="7" fill="#fff"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="side-box right-box">
+          <div class="terminal-bar">
+            <div class="traffic-lights">
+              <span class="light red"></span>
+              <span class="light yellow"></span>
+              <span class="light green"></span>
+            </div>
+            <div class="terminal-time" id="terminalTime"></div>
+          </div>
+          <div class="terminal-content">
+            <div class="terminal-line">
+              <span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-below">
+        <div class="slide-below-inner">
+          <h2>Second Slide</h2>
+          <p>Put your additional content here. This section is always exactly one screen tall and wide.</p>
+          <!-- Add more content as needed -->
         </div>
       </div>
     </div>
-    <div class="side-box right-box">
-      <div class="terminal-bar">
-        <div class="traffic-lights">
-          <span class="light red"></span>
-          <span class="light yellow"></span>
-          <span class="light green"></span>
-        </div>
-        <div class="terminal-time" id="terminalTime"></div>
-      </div>
-      <div class="terminal-content">
-        <div class="terminal-line">
-          <span class="terminal-prompt">&nbsp;<span class="terminal-user">harshith</span>@<span class="terminal-host">macbook</span>:<span class="terminal-path">~</span>$</span>
-        </div>
+    <div class="scroll-tube">
+      <div class="scroll-tube-bar">
+        <div class="scroll-tube-highlight"></div>
       </div>
     </div>
-  </div>
+  </body>
   <script>
     // Terminal time clock
     function updateTerminalTime() {
@@ -947,6 +1054,27 @@
         if (inputEl) inputEl.focus();
       }, 0);
     });
+
+    // Scroll tube highlight logic (for snap-container)
+    function updateScrollTube() {
+      const tube = document.querySelector('.scroll-tube');
+      const snap = document.querySelector('.snap-container');
+      if (!tube || !snap) return;
+      const scrollY = snap.scrollTop;
+      const vh = snap.clientHeight;
+      // If in top slide, highlight top; if in second slide, highlight bottom
+      if (scrollY < vh/2) {
+        tube.classList.remove('highlight-bottom');
+      } else {
+        tube.classList.add('highlight-bottom');
+      }
+    }
+    const snap = document.querySelector('.snap-container');
+    if (snap) {
+      snap.addEventListener('scroll', updateScrollTube);
+      snap.addEventListener('resize', updateScrollTube);
+    }
+    window.addEventListener('resize', updateScrollTube);
+    document.addEventListener('DOMContentLoaded', updateScrollTube);
   </script>
-</body>
 </html>
